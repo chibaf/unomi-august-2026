@@ -9,6 +9,7 @@ real ya = 0.2;
 real xe = 0.25;
 real ye = 0.2;
 int nn = 15;
+int nnw=15;
 
 //TODO
 real Um = 1.5; //max velocity (Rey 100)
@@ -20,6 +21,7 @@ real T=5;
 real dt = D/nn/Um; //CFL = 1
 real epspq = 1e-10;
 real eps = 1e-6;
+real width=2.2;
 
 // Variables
 func Ub = Um*2./3.;
@@ -27,43 +29,36 @@ real alpha = 1/dt;
 real Rey = Ub*D/nu;
 real t = 0.;
 
-// Mesh
-//border fr1(t=0, 2.2){y=0.1*sin(10*pi*t/2.2); x=t; label=1;} // #swaving border
-//border fr2(t=0, H){x=2.2; y=t; label=2;}
-//border fr3(t=2.2, 0){x=t; y=H; label=1;}
-//border fr4(t=H, 0){x=0; y=t; label=22;}
-////border fr5(t=2*pi, 0){x=cx0+D*sin(t)/2; y=cy0+D*cos(t)/2; label=3;}
-//mesh Th = buildmesh(fr1(5*nn) + fr2(nn) + fr3(5*nn) + fr4(nn));// + fr5(-nn*3)); // #mesh generation
-// part 
 real d1=0.25; //(1) thickness
 real d2=0.5;  //(3) thickness
 real d3=0.25;  //(4) thickness
+real rr=0.05;
 //(1)
-border A1(t=0, 2.2){y=H; x=t; label=11;} 
-border A2(t=0, d1){y=H+t; x=2.2; label=12;} 
-border A3(t=2.2,0){y=H+d1; x=t; label=13;} // top
+border A1(t=0, width){y=H; x=t; label=11;} 
+border A2(t=0, d1){y=H+t; x=width; label=12;} 
+border A3(t=width,0){y=H+d1; x=t; label=13;} // top
 border A4(t=d1,0){y=H+t; x=0; label=14;} 
 mesh Th1 = buildmesh(A1(5*nn)+A2(nn)+A3(5*nn)+A4(nn));
 //plot(Th1,wait=1);
 //(2)
-border fr1(t=0, 2.2){y=0.1*sin(10*pi*t/2.2); x=t; label=1;} // #swaving border
-border fr2(t=0, H){x=2.2; y=t; label=2;}
-border fr3(t=2.2, 0){x=t; y=H; label=1;}
+border fr1(t=0, width){y=rr*sin(nnw*pi*t/width); x=t; label=1;} // #swaving border
+border fr2(t=0, H){x=width; y=t; label=2;}
+border fr3(t=width, 0){x=t; y=H; label=1;}
 border fr4(t=H, 0){x=0; y=t; label=22;}
 //border fr5(t=2*pi, 0){x=cx0+D*sin(t)/2; y=cy0+D*cos(t)/2; label=3;}
 mesh Th2 = buildmesh(fr1(5*nn) + fr2(nn) + fr3(5*nn) + fr4(nn));// + fr5(-nn*3)); // #mesh generation
 //plot(Th2,wait=1);
 //(3)
-border B1(t=2.2,0){y=0.1*sin(10*pi*t/2.2); x=t; label=31;}  
+border B1(t=width,0){y=rr*sin(nnw*pi*t/width); x=t; label=31;}  
 border B2(t=0, -d2){y=t; x=0; label=32;} 
-border B3(t=0,2.2){y=-d2; x=t; label=33;} 
-border B4(t=-d2,0){y=t; x=2.2; label=34;} 
+border B3(t=0,width){y=-d2; x=t; label=33;} 
+border B4(t=-d2,0){y=t; x=width; label=34;} 
 mesh Th3 = buildmesh(B1(5*nn)+B2(nn)+B3(5*nn)+B4(nn));
 //(4)
-border C1(t=2.2,0){y=-d2; x=t; label=41;} 
+border C1(t=width,0){y=-d2; x=t; label=41;} 
 border C2(t=0, -d3){y=-d2+t; x=0; label=42;} 
-border C3(t=0,2.2){y=-d2-d3; x=t; label=43;} // bottom
-border C4(t=d3,0){y=-d2-t; x=2.2; label=44;} 
+border C3(t=0,width){y=-d2-d3; x=t; label=43;} // bottom
+border C4(t=d3,0){y=-d2-t; x=width; label=44;} 
 mesh Th4 = buildmesh(C1(5*nn)+C2(nn)+C3(5*nn)+C4(nn));
 //
 mesh Th=Th1+Th2+Th3+Th4;
